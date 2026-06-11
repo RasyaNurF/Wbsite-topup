@@ -88,8 +88,7 @@ php artisan migrate --seed
 8. Start the development server
 
 ```bash
-php artisan serve
-npm run dev
+composer run dev
 ```
 
 ## Support this project
