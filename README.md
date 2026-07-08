@@ -50,7 +50,7 @@ cp .env.docker .env
 ./docker-run.sh setup
 ```
 
-Aplikasi berjalan di **http://localhost** · Vite HMR di **http://localhost:5173**
+Aplikasi berjalan di **http://localhost**
 
 #### Perintah Docker yang Tersedia
 
