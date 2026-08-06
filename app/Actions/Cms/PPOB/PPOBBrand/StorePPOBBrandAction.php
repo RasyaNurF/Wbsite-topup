@@ -3,12 +3,13 @@
 namespace App\Actions\Cms\PPOB\PPOBBrand;
 
 use App\Models\PPOB\PPOBBrand;
+use App\Traits\CacheInvalidator;
 use App\Traits\WithMediaCollection;
 use Illuminate\Http\UploadedFile;
 
 class StorePPOBBrandAction
 {
-    use WithMediaCollection;
+    use CacheInvalidator, WithMediaCollection;
 
     /**
      * Handle the action.
@@ -40,6 +41,10 @@ class StorePPOBBrandAction
                 collection: 'default_product_image',
             );
         }
+
+        // Clear brand cache
+        $this->clearBrandCache();
+        $this->clearCategoryCache();
 
         return $brand;
     }

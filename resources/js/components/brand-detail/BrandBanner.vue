@@ -15,6 +15,7 @@ defineProps<{
             :src="brand.banner"
             :alt="brand.name"
             class="h-full w-full object-cover"
+            loading="lazy"
         />
         <div
             class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"
@@ -33,6 +34,7 @@ defineProps<{
                             :src="brand.image"
                             :alt="brand.name"
                             class="h-full w-full object-cover"
+                            loading="lazy"
                         />
                     </div>
 

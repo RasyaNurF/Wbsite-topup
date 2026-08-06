@@ -3,12 +3,13 @@
 namespace App\Actions\Cms\PPOB\PPOBCategory;
 
 use App\Models\PPOB\PPOBCategory;
+use App\Traits\CacheInvalidator;
 use App\Traits\WithMediaCollection;
 use Illuminate\Http\UploadedFile;
 
 class UpdatePPOBCategoryAction
 {
-    use WithMediaCollection;
+    use CacheInvalidator, WithMediaCollection;
 
     /**
      * Handle the action.
@@ -27,6 +28,10 @@ class UpdatePPOBCategoryAction
 
         // Update the status of the brands and products that belong to this category
         $category->brands()->update(['status' => $category->status]);
+
+        // Clear category and brand cache
+        $this->clearCategoryCache();
+        $this->clearBrandCache();
 
         return true;
     }

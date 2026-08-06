@@ -89,6 +89,7 @@ const handlePaymentTypeChange = (type: 'manual' | 'automatic') => {
                     :src="manualBank.img"
                     :alt="manualBank.name"
                     class="h-8 w-12 object-contain"
+                    loading="lazy"
                 />
                 <div class="flex-1 text-left">
                     <div class="font-medium text-foreground">
@@ -126,6 +127,7 @@ const handlePaymentTypeChange = (type: 'manual' | 'automatic') => {
                     :src="method.img"
                     :alt="method.name"
                     class="h-8 w-12 object-contain"
+                    loading="lazy"
                 />
                 <span class="flex-1 text-left font-medium text-foreground">
                     {{ method.name }}

@@ -3,12 +3,13 @@
 namespace App\Actions\Cms\Web\Slider;
 
 use App\Models\Web\Slider;
+use App\Traits\CacheInvalidator;
 use App\Traits\WithMediaCollection;
 use Illuminate\Http\UploadedFile;
 
 class UpdateSliderAction
 {
-    use WithMediaCollection;
+    use CacheInvalidator, WithMediaCollection;
 
     /**
      * Handle the action.
@@ -23,6 +24,11 @@ class UpdateSliderAction
             );
         }
 
-        return $slider->update($data);
+        $result = $slider->update($data);
+
+        // Clear slider cache
+        $this->clearSliderCache();
+
+        return $result;
     }
 }

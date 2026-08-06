@@ -53,6 +53,7 @@ const emit = defineEmits<{
                                 :src="product.image"
                                 :alt="product.name"
                                 class="h-8 object-cover"
+                                loading="lazy"
                             />
                         </div>
                         <div>

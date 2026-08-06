@@ -3,12 +3,13 @@
 namespace App\Actions\Cms\Web\Slider;
 
 use App\Models\Web\Slider;
+use App\Traits\CacheInvalidator;
 use App\Traits\WithMediaCollection;
 use Illuminate\Http\UploadedFile;
 
 class StoreSliderAction
 {
-    use WithMediaCollection;
+    use CacheInvalidator, WithMediaCollection;
 
     /**
      * Handle the action.
@@ -24,6 +25,9 @@ class StoreSliderAction
                 collection: 'image',
             );
         }
+
+        // Clear slider cache
+        $this->clearSliderCache();
 
         return $slider;
     }

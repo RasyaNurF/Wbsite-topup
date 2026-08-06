@@ -79,6 +79,7 @@ const logout = () => {
                         :src="appLogo"
                         alt="Logo"
                         class="h-10 w-10 rounded-lg object-cover"
+                        loading="lazy"
                     />
                     <div
                         v-else

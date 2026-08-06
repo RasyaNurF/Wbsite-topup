@@ -3,12 +3,13 @@
 namespace App\Actions\Cms\PPOB\PPOBCategory;
 
 use App\Models\PPOB\PPOBCategory;
+use App\Traits\CacheInvalidator;
 use App\Traits\WithMediaCollection;
 use Illuminate\Http\UploadedFile;
 
 class StorePPOBCategoryAction
 {
-    use WithMediaCollection;
+    use CacheInvalidator, WithMediaCollection;
 
     /**
      * Handle the action.
@@ -24,6 +25,9 @@ class StorePPOBCategoryAction
                 collection: 'image',
             );
         }
+
+        // Clear category cache
+        $this->clearCategoryCache();
 
         return $category;
     }

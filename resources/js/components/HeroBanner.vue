@@ -28,6 +28,11 @@ const goToSlide = (index: number) => {
     currentSlide.value = index;
 };
 
+const shouldLoadSlide = (index: number) => {
+    const diff = Math.abs(index - currentSlide.value);
+    return diff <= 1 || diff >= props.slides.length - 1;
+};
+
 const startAutoplay = () => {
     if (props.autoplay && props.slides.length > 1) {
         autoplayTimer = setInterval(nextSlide, props.interval);
@@ -65,9 +70,11 @@ onUnmounted(() => {
                 :class="index === currentSlide ? 'opacity-100' : 'opacity-0'"
             >
                 <img
+                    v-if="shouldLoadSlide(index)"
                     :src="slide.image"
                     :alt="slide.title"
                     class="h-full w-full object-cover"
+                    :loading="index === 0 ? 'eager' : 'lazy'"
                 />
             </div>
         </div>

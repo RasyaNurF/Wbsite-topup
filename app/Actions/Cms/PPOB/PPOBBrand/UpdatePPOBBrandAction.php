@@ -3,12 +3,13 @@
 namespace App\Actions\Cms\PPOB\PPOBBrand;
 
 use App\Models\PPOB\PPOBBrand;
+use App\Traits\CacheInvalidator;
 use App\Traits\WithMediaCollection;
 use Illuminate\Http\UploadedFile;
 
 class UpdatePPOBBrandAction
 {
-    use WithMediaCollection;
+    use CacheInvalidator, WithMediaCollection;
 
     /**
      * Handle the action.
@@ -43,6 +44,13 @@ class UpdatePPOBBrandAction
             'provider' => $data['provider'] ?? $brand->provider,
         ]);
 
-        return $brand->update($data);
+        $result = $brand->update($data);
+
+        // Clear brand cache
+        $this->clearBrandCache();
+        $this->clearCategoryCache();
+        $this->clearBrandDetailCache($brand->slug);
+
+        return $result;
     }
 }
