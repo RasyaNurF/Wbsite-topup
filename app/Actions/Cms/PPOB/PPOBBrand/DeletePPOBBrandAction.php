@@ -2,25 +2,22 @@
 
 namespace App\Actions\Cms\PPOB\PPOBBrand;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\PPOB\PPOBBrand;
-use App\Traits\CacheInvalidator;
+use App\Traits\WithVersionedCache;
 
 class DeletePPOBBrandAction
 {
-    use CacheInvalidator;
+    use WithVersionedCache;
 
     /**
      * Handle the action.
      */
     public function handle(PPOBBrand $brand): ?bool
     {
-        $brandSlug = $brand->slug;
         $result = $brand->delete();
 
-        // Clear brand cache
-        $this->clearBrandCache();
-        $this->clearCategoryCache();
-        $this->clearBrandDetailCache($brandSlug);
+        $this->flushCacheGroup(CacheGroupEnum::BRANDS, CacheGroupEnum::CATEGORIES);
 
         return $result;
     }

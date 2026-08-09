@@ -2,14 +2,15 @@
 
 namespace App\Actions\Cms\Web\Slider;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\Web\Slider;
-use App\Traits\CacheInvalidator;
 use App\Traits\WithMediaCollection;
+use App\Traits\WithVersionedCache;
 use Illuminate\Http\UploadedFile;
 
 class StoreSliderAction
 {
-    use CacheInvalidator, WithMediaCollection;
+    use WithMediaCollection, WithVersionedCache;
 
     /**
      * Handle the action.
@@ -26,8 +27,7 @@ class StoreSliderAction
             );
         }
 
-        // Clear slider cache
-        $this->clearSliderCache();
+        $this->flushCacheGroup(CacheGroupEnum::SLIDERS);
 
         return $slider;
     }

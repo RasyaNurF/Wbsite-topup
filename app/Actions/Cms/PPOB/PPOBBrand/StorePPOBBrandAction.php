@@ -2,14 +2,15 @@
 
 namespace App\Actions\Cms\PPOB\PPOBBrand;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\PPOB\PPOBBrand;
-use App\Traits\CacheInvalidator;
 use App\Traits\WithMediaCollection;
+use App\Traits\WithVersionedCache;
 use Illuminate\Http\UploadedFile;
 
 class StorePPOBBrandAction
 {
-    use CacheInvalidator, WithMediaCollection;
+    use WithMediaCollection, WithVersionedCache;
 
     /**
      * Handle the action.
@@ -42,9 +43,7 @@ class StorePPOBBrandAction
             );
         }
 
-        // Clear brand cache
-        $this->clearBrandCache();
-        $this->clearCategoryCache();
+        $this->flushCacheGroup(CacheGroupEnum::BRANDS, CacheGroupEnum::CATEGORIES);
 
         return $brand;
     }

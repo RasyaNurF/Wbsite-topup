@@ -2,13 +2,15 @@
 
 namespace App\Actions\Cms\PPOB\PPOBProduct;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\PPOB\PPOBProduct;
 use App\Traits\WithMediaCollection;
+use App\Traits\WithVersionedCache;
 use Illuminate\Http\UploadedFile;
 
 class UpdatePPOBProductAction
 {
-    use WithMediaCollection;
+    use WithMediaCollection, WithVersionedCache;
 
     /**
      * Handle the action.
@@ -26,6 +28,10 @@ class UpdatePPOBProductAction
             );
         }
 
-        return $product->update($data);
+        $result = $product->update($data);
+
+        $this->flushCacheGroup(CacheGroupEnum::BRANDS);
+
+        return $result;
     }
 }

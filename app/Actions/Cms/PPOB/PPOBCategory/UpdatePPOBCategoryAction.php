@@ -2,14 +2,15 @@
 
 namespace App\Actions\Cms\PPOB\PPOBCategory;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\PPOB\PPOBCategory;
-use App\Traits\CacheInvalidator;
 use App\Traits\WithMediaCollection;
+use App\Traits\WithVersionedCache;
 use Illuminate\Http\UploadedFile;
 
 class UpdatePPOBCategoryAction
 {
-    use CacheInvalidator, WithMediaCollection;
+    use WithMediaCollection, WithVersionedCache;
 
     /**
      * Handle the action.
@@ -29,9 +30,7 @@ class UpdatePPOBCategoryAction
         // Update the status of the brands and products that belong to this category
         $category->brands()->update(['status' => $category->status]);
 
-        // Clear category and brand cache
-        $this->clearCategoryCache();
-        $this->clearBrandCache();
+        $this->flushCacheGroup(CacheGroupEnum::CATEGORIES, CacheGroupEnum::BRANDS);
 
         return true;
     }

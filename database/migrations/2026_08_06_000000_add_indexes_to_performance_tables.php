@@ -11,25 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Index for brand status filtering (used in every home page query)
+        // Covers the three shapes the home page asks for: the full active brand
+        // list ordered by `order`, that same list narrowed to one category, and
+        // the featured strip.
         Schema::table('p_p_o_b_brands', function (Blueprint $table) {
-            $table->index('status');
-            $table->index(['status', 'order']); // Composite index for filtered ordering
+            $table->index(['status', 'order']);
+            $table->index(['status', 'p_p_o_b_category_id', 'order']);
+            $table->index(['featured', 'status', 'order']);
         });
 
-        // Index for category status filtering
         Schema::table('p_p_o_b_categories', function (Blueprint $table) {
             $table->index('status');
         });
 
-        // Index for slider status filtering
         Schema::table('sliders', function (Blueprint $table) {
-            $table->index('status');
+            $table->index(['status', 'order']);
         });
 
-        // Index for FAQ status filtering
         Schema::table('faqs', function (Blueprint $table) {
-            $table->index('status');
+            $table->index(['status', 'order']);
         });
     }
 
@@ -39,8 +39,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('p_p_o_b_brands', function (Blueprint $table) {
-            $table->dropIndex(['status']);
             $table->dropIndex(['status', 'order']);
+            $table->dropIndex(['status', 'p_p_o_b_category_id', 'order']);
+            $table->dropIndex(['featured', 'status', 'order']);
         });
 
         Schema::table('p_p_o_b_categories', function (Blueprint $table) {
@@ -48,11 +49,11 @@ return new class extends Migration
         });
 
         Schema::table('sliders', function (Blueprint $table) {
-            $table->dropIndex(['status']);
+            $table->dropIndex(['status', 'order']);
         });
 
         Schema::table('faqs', function (Blueprint $table) {
-            $table->dropIndex(['status']);
+            $table->dropIndex(['status', 'order']);
         });
     }
 };

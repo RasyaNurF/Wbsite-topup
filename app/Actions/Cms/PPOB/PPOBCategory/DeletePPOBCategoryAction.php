@@ -2,12 +2,13 @@
 
 namespace App\Actions\Cms\PPOB\PPOBCategory;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\PPOB\PPOBCategory;
-use App\Traits\CacheInvalidator;
+use App\Traits\WithVersionedCache;
 
 class DeletePPOBCategoryAction
 {
-    use CacheInvalidator;
+    use WithVersionedCache;
 
     /**
      * Handle the action.
@@ -16,9 +17,7 @@ class DeletePPOBCategoryAction
     {
         $result = $category->delete();
 
-        // Clear category and brand cache
-        $this->clearCategoryCache();
-        $this->clearBrandCache();
+        $this->flushCacheGroup(CacheGroupEnum::CATEGORIES, CacheGroupEnum::BRANDS);
 
         return $result;
     }

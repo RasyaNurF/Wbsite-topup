@@ -2,14 +2,15 @@
 
 namespace App\Actions\Cms\PPOB\PPOBBrand;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\PPOB\PPOBBrand;
-use App\Traits\CacheInvalidator;
 use App\Traits\WithMediaCollection;
+use App\Traits\WithVersionedCache;
 use Illuminate\Http\UploadedFile;
 
 class UpdatePPOBBrandAction
 {
-    use CacheInvalidator, WithMediaCollection;
+    use WithMediaCollection, WithVersionedCache;
 
     /**
      * Handle the action.
@@ -46,10 +47,7 @@ class UpdatePPOBBrandAction
 
         $result = $brand->update($data);
 
-        // Clear brand cache
-        $this->clearBrandCache();
-        $this->clearCategoryCache();
-        $this->clearBrandDetailCache($brand->slug);
+        $this->flushCacheGroup(CacheGroupEnum::BRANDS, CacheGroupEnum::CATEGORIES);
 
         return $result;
     }

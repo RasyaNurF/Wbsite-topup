@@ -2,14 +2,15 @@
 
 namespace App\Actions\Cms\PPOB\PPOBCategory;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\PPOB\PPOBCategory;
-use App\Traits\CacheInvalidator;
 use App\Traits\WithMediaCollection;
+use App\Traits\WithVersionedCache;
 use Illuminate\Http\UploadedFile;
 
 class StorePPOBCategoryAction
 {
-    use CacheInvalidator, WithMediaCollection;
+    use WithMediaCollection, WithVersionedCache;
 
     /**
      * Handle the action.
@@ -26,8 +27,7 @@ class StorePPOBCategoryAction
             );
         }
 
-        // Clear category cache
-        $this->clearCategoryCache();
+        $this->flushCacheGroup(CacheGroupEnum::CATEGORIES);
 
         return $category;
     }

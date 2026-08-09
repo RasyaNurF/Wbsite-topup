@@ -7,7 +7,6 @@ import ContactDetailsForm from '@/components/brand-detail/ContactDetailsForm.vue
 import OrderSummary from '@/components/brand-detail/OrderSummary.vue';
 import PaymentMethodSelection from '@/components/brand-detail/PaymentMethodSelection.vue';
 import ProductSelection from '@/components/brand-detail/ProductSelection.vue';
-import BrandDetailSkeleton from '@/components/skeleton/BrandDetailSkeleton.vue';
 import MainFooter from '@/components/MainFooter.vue';
 import MainHeader from '@/components/MainHeader.vue';
 import Maintenance from '@/pages/main/Maintenance.vue';
@@ -23,7 +22,7 @@ import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { useDebounceFn } from '@vueuse/core';
 import axios from 'axios';
 import { ChevronDown } from 'lucide-vue-next';
-import { computed, ref, watch, onMounted } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
     brand: PPOBBrandDataItem;
@@ -33,15 +32,6 @@ const page = usePage();
 const user = page.props.auth.user;
 const setting = page.props.setting;
 const appUrl = page.props.app_url;
-
-const isLoading = ref(true);
-
-onMounted(() => {
-    // Show skeleton for at least 200ms to prevent flash
-    setTimeout(() => {
-        isLoading.value = false;
-    }, 200);
-});
 
 // Form data using Inertia's useForm
 const form = useForm({
@@ -352,13 +342,8 @@ const handleCheckout = () => {
         </template>
         <!-- Main Content -->
         <main class="flex-1 w-full" v-else>
-            <!-- Show skeleton while loading -->
-            <BrandDetailSkeleton v-if="isLoading" />
-
-            <!-- Show actual content when loaded -->
-            <template v-else>
-                <!-- Banner Section -->
-                <BrandBanner :brand="brand" />
+            <!-- Banner Section -->
+            <BrandBanner :brand="brand" />
 
             <!-- Form Content -->
             <div class="mx-auto max-w-7xl px-4 py-8">

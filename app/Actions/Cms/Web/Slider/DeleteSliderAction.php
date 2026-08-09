@@ -2,12 +2,13 @@
 
 namespace App\Actions\Cms\Web\Slider;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\Web\Slider;
-use App\Traits\CacheInvalidator;
+use App\Traits\WithVersionedCache;
 
 class DeleteSliderAction
 {
-    use CacheInvalidator;
+    use WithVersionedCache;
 
     /**
      * Handle the action.
@@ -16,8 +17,7 @@ class DeleteSliderAction
     {
         $result = $slider->delete();
 
-        // Clear slider cache
-        $this->clearSliderCache();
+        $this->flushCacheGroup(CacheGroupEnum::SLIDERS);
 
         return $result;
     }

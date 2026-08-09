@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers\Main;
 
+use App\Enums\CacheGroupEnum;
 use App\Http\Controllers\Controller;
 use App\Models\PPOB\PPOBBrand;
 use App\Models\Web\Faq;
-use Illuminate\Support\Facades\Cache;
+use App\Traits\WithVersionedCache;
 use Inertia\Response;
 
 class BrandController extends Controller
 {
+    use WithVersionedCache;
+
     public function show(PPOBBrand $brand): Response
     {
-        $brandSlug = $brand->slug;
-        $cacheKey = "brand:detail:{$brandSlug}";
-
-        // Cache brand details for 30 minutes
-        $brandData = Cache::remember($cacheKey, 1800, function () use ($brand) {
+        $brand = $this->flexibleVersioned(CacheGroupEnum::BRANDS, "detail:{$brand->slug}", [1800, 3600], function () use ($brand) {
             $brand->load(['products.media', 'category']);
 
             $brand->image = $brand->getFirstMediaUrl('image');
@@ -33,8 +32,7 @@ class BrandController extends Controller
             return $brand;
         });
 
-        // Cache FAQs for 1 hour
-        $faqs = Cache::remember('faqs:active', 3600, function () {
+        $faqs = $this->flexibleVersioned(CacheGroupEnum::FAQS, 'active', [3600, 7200], function () {
             return Faq::where('status', true)->orderBy('order', 'asc')->get();
         });
 
@@ -42,17 +40,17 @@ class BrandController extends Controller
         $settingFavicon = getSetting('favicon') ?: '/favicon.svg';
 
         return inertia()->render('main/BrandDetail', [
-            'brand' => $brandData,
+            'brand' => $brand,
             'faqs' => $faqs,
         ])->withViewData([
             'meta' => [
-                'title' => "{$brandData->name} - Top Up Murah & Cepat | {$settingTitle}",
-                'description' => "Top up {$brandData->name} termurah dan terpercaya di {$settingTitle}. Proses instan, tersedia berbagai metode pembayaran.",
-                'keywords' => "top up {$brandData->name}, beli {$brandData->name}, harga {$brandData->name}, {$brandData->name} murah, {$settingTitle}, topup game",
+                'title' => "{$brand->name} - Top Up Murah & Cepat | {$settingTitle}",
+                'description' => "Top up {$brand->name} termurah dan terpercaya di {$settingTitle}. Proses instan, tersedia berbagai metode pembayaran.",
+                'keywords' => "top up {$brand->name}, beli {$brand->name}, harga {$brand->name}, {$brand->name} murah, {$settingTitle}, topup game",
                 'author' => $settingTitle,
                 'application_name' => $settingTitle,
-                'url' => route('product.show', $brandData->slug),
-                'image' => $brandData->image ?: (config('app.url').$settingFavicon),
+                'url' => route('product.show', $brand->slug),
+                'image' => $brand->image ?: (config('app.url').$settingFavicon),
             ],
         ]);
     }
