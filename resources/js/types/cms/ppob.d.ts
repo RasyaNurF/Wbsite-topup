@@ -45,7 +45,8 @@ export interface PPOBProductDataItem {
     sku: string;
     description?: string;
     delay: boolean;
-    buy_price: number;
+    /** Admin-only, hidden on the storefront. */
+    buy_price?: number;
     sell_price: number;
     image?: string;
     status: boolean;

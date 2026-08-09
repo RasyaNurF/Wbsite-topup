@@ -25,6 +25,14 @@ class PPOBProduct extends Model implements HasMedia
         'status',
     ];
 
+    /**
+     * Cost price is internal only, it must never reach the storefront.
+     * Admin screens opt back in with `makeVisible('buy_price')`.
+     */
+    protected $hidden = [
+        'buy_price',
+    ];
+
     public function getRouteKeyName()
     {
         return 'slug';
