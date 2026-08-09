@@ -2,13 +2,15 @@
 
 namespace App\Actions\Cms\Web\Slider;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\Web\Slider;
 use App\Traits\WithMediaCollection;
+use App\Traits\WithVersionedCache;
 use Illuminate\Http\UploadedFile;
 
 class StoreSliderAction
 {
-    use WithMediaCollection;
+    use WithMediaCollection, WithVersionedCache;
 
     /**
      * Handle the action.
@@ -24,6 +26,8 @@ class StoreSliderAction
                 collection: 'image',
             );
         }
+
+        $this->flushCacheGroup(CacheGroupEnum::SLIDERS);
 
         return $slider;
     }

@@ -68,6 +68,8 @@ onUnmounted(() => {
                     :src="slide.image"
                     :alt="slide.title"
                     class="h-full w-full object-cover"
+                    :loading="index === 0 ? 'eager' : 'lazy'"
+                    :fetchpriority="index === 0 ? 'high' : 'auto'"
                 />
             </div>
         </div>

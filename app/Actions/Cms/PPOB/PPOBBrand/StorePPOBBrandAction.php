@@ -2,13 +2,15 @@
 
 namespace App\Actions\Cms\PPOB\PPOBBrand;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\PPOB\PPOBBrand;
 use App\Traits\WithMediaCollection;
+use App\Traits\WithVersionedCache;
 use Illuminate\Http\UploadedFile;
 
 class StorePPOBBrandAction
 {
-    use WithMediaCollection;
+    use WithMediaCollection, WithVersionedCache;
 
     /**
      * Handle the action.
@@ -40,6 +42,8 @@ class StorePPOBBrandAction
                 collection: 'default_product_image',
             );
         }
+
+        $this->flushCacheGroup(CacheGroupEnum::BRANDS, CacheGroupEnum::CATEGORIES);
 
         return $brand;
     }

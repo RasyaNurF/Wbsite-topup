@@ -2,13 +2,17 @@
 
 namespace App\Actions\Cms\PPOB\ImportDigiflazz;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\PPOB\PPOBBrand;
 use App\Models\PPOB\PPOBCategory;
 use App\Models\PPOB\PPOBProduct;
 use App\Services\DigiflazzService;
+use App\Traits\WithVersionedCache;
 
 class SyncPPOBProductAction
 {
+    use WithVersionedCache;
+
     public function __construct(
         public readonly DigiflazzService $digiflazzService,
     ) {}
@@ -60,5 +64,7 @@ class SyncPPOBProductAction
                 ],
             );
         }
+
+        $this->flushCacheGroup(CacheGroupEnum::BRANDS, CacheGroupEnum::CATEGORIES);
     }
 }

@@ -82,6 +82,7 @@ const appUrl = page.props.app_url;
                                 :src="category.image"
                                 alt="category.name"
                                 class="h-12 w-12 object-contain"
+                                loading="lazy"
                             />
                             <span class="text-3xl" v-else> 🎮 </span>
                             <span class="text-sm font-semibold text-foreground">

@@ -2,13 +2,15 @@
 
 namespace App\Actions\Cms\PPOB\PPOBBrand;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\PPOB\PPOBBrand;
 use App\Traits\WithMediaCollection;
+use App\Traits\WithVersionedCache;
 use Illuminate\Http\UploadedFile;
 
 class UpdatePPOBBrandAction
 {
-    use WithMediaCollection;
+    use WithMediaCollection, WithVersionedCache;
 
     /**
      * Handle the action.
@@ -43,6 +45,10 @@ class UpdatePPOBBrandAction
             'provider' => $data['provider'] ?? $brand->provider,
         ]);
 
-        return $brand->update($data);
+        $result = $brand->update($data);
+
+        $this->flushCacheGroup(CacheGroupEnum::BRANDS, CacheGroupEnum::CATEGORIES);
+
+        return $result;
     }
 }

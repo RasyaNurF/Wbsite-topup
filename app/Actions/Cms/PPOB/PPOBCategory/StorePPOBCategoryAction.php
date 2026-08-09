@@ -2,13 +2,15 @@
 
 namespace App\Actions\Cms\PPOB\PPOBCategory;
 
+use App\Enums\CacheGroupEnum;
 use App\Models\PPOB\PPOBCategory;
 use App\Traits\WithMediaCollection;
+use App\Traits\WithVersionedCache;
 use Illuminate\Http\UploadedFile;
 
 class StorePPOBCategoryAction
 {
-    use WithMediaCollection;
+    use WithMediaCollection, WithVersionedCache;
 
     /**
      * Handle the action.
@@ -24,6 +26,8 @@ class StorePPOBCategoryAction
                 collection: 'image',
             );
         }
+
+        $this->flushCacheGroup(CacheGroupEnum::CATEGORIES);
 
         return $category;
     }
