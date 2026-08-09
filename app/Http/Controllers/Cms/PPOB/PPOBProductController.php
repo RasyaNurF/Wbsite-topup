@@ -59,6 +59,7 @@ class PPOBProductController extends Controller
         // Load media
         $model->map(function ($item) {
             $item->image = $item->getFirstMediaUrl('image');
+            $item->makeVisible('buy_price');
 
             return $item;
         });
@@ -118,6 +119,7 @@ class PPOBProductController extends Controller
         Gate::authorize('update'.$this->resource);
 
         $product->image = $product->getFirstMediaUrl('image');
+        $product->makeVisible('buy_price');
 
         return inertia('cms/ppob/ppob-product/Edit', [
             'categories' => PPOBCategory::where('status', true)->get(),
