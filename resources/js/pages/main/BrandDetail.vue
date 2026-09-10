@@ -54,7 +54,11 @@ const discountAmount = ref(0);
 
 const abortController = ref<AbortController | null>(null);
 
+// ⚠️ TESTING MODE: auto-check game ID dinonaktifkan sementara.
+// Hapus baris "return;" di bawah ini untuk mengaktifkan kembali fitur cek ID.
 const checkGameAccount = useDebounceFn(async () => {
+    return; // TEMP: disable cek ID untuk testing checkout
+
     // Check if brand is mobile legends
     if (!props.brand.name.toLowerCase().includes('mobile legend')) {
         return;
@@ -149,7 +153,7 @@ const paymentMethods = [
     {
         id: 'qris',
         name: 'QRIS',
-        fee: 0.007, // 0.7%
+        fee: 0.007, // 0.7% fee
         action: 'multiply' as const,
         img: '/images/QRIS.svg',
     },

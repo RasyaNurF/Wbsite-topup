@@ -39,20 +39,26 @@ class StoreTransactionRequest extends FormRequest
     {
         $product = PPOBProduct::find($this->product_id);
 
-        // Pro Version
-        $gameProService = new GameProService;
-        // Check the brand if the brand is mobile legends, check the server and uid
-        if (Str::contains(strtolower($product->brand->name), 'mobile legend')) {
-            $resolve = $gameProService->resolveAccount(
-                game: 'mobilelegend',
-                uid: $this->account_id,
-                server: $this->server_id,
-            );
+        // ⚠️ TESTING MODE: validasi Game ID/Server ke GameProService dinonaktifkan sementara.
+        // Hapus flag ini (atau set false) untuk mengaktifkan lagi validasi asli sebelum production.
+        $skipAccountValidation = true;
 
-            if (! $resolve['status']) {
-                throw ValidationException::withMessages([
-                    'account_id' => 'Game id or server is invalid',
-                ]);
+        if (! $skipAccountValidation) {
+            // Pro Version
+            $gameProService = new GameProService;
+            // Check the brand if the brand is mobile legends, check the server and uid
+            if (Str::contains(strtolower($product->brand->name), 'mobile legend')) {
+                $resolve = $gameProService->resolveAccount(
+                    game: 'mobilelegend',
+                    uid: $this->account_id,
+                    server: $this->server_id,
+                );
+
+                if (! $resolve['status']) {
+                    throw ValidationException::withMessages([
+                        'account_id' => 'Game id or server is invalid',
+                    ]);
+                }
             }
         }
 
