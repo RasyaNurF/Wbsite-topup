@@ -41,6 +41,11 @@ export interface NavItem {
     sub_menu?: NavItem[];
 }
 
+export interface CartSummary {
+    count: number;
+    total: number;
+}
+
 export type AppPageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
@@ -50,6 +55,7 @@ export type AppPageProps<
     setting: SettingValue;
     app_url: string;
     sidebarOpen: boolean;
+    cart: CartSummary;
 };
 
 export interface User {

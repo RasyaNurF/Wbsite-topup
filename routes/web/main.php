@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Main\BrandController;
+use App\Http\Controllers\Main\CartController;
 use App\Http\Controllers\Main\CheckGameAccountController;
 use App\Http\Controllers\Main\ContentController;
 use App\Http\Controllers\Main\HomeController;
@@ -13,6 +14,13 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/privacy-policy', [ContentController::class, 'privacyPolicy'])->name('privacy-policy');
 Route::get('/terms', [ContentController::class, 'terms'])->name('terms');
 Route::get('/brand/{brand}', [BrandController::class, 'show'])->name('product.show');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/cart/items', [CartController::class, 'items'])->name('cart.items');
+Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+Route::patch('/cart/{cartItem}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
+Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
 
 Route::post('/checkout', [TransactionController::class, 'store'])->name('checkout.store');
 Route::get('/transaction/{order}', [TransactionController::class, 'show'])->name('transaction.show');

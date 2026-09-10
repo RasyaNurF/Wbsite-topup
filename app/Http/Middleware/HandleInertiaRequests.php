@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Menu\Menu;
+use App\Services\CartService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -66,6 +67,7 @@ class HandleInertiaRequests extends Middleware
             'setting' => getSetting(),
             'app_url' => config('app.url'),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'cart' => fn () => app(CartService::class)->summary($request),
         ];
     }
 }

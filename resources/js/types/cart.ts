@@ -1,0 +1,18 @@
+export interface CartItemData {
+    id: number;
+    quantity: number;
+    price: number;
+    subtotal: number;
+    product: {
+        id: number;
+        name: string;
+        slug: string;
+        sell_price: number;
+        status: boolean;
+        image: string | null;
+        brand: {
+            name: string;
+            slug: string;
+        } | null;
+    } | null;
+}

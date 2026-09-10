@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CartSheet from '@/components/cart/CartSheet.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -122,6 +123,12 @@ const logout = () => {
                         Cek Transaksi
                     </Link>
                     <Link
+                        href="/cart"
+                        class="text-sm font-medium text-foreground hover:text-primary"
+                    >
+                        Keranjang
+                    </Link>
+                    <Link
                         href="/profile"
                         class="text-sm font-medium text-foreground hover:text-primary"
                     >
@@ -131,6 +138,9 @@ const logout = () => {
 
                 <!-- Right side container for mobile -->
                 <div class="flex items-center gap-2">
+                    <!-- Cart -->
+                    <CartSheet />
+
                     <!-- Theme Switcher -->
                     <DropdownMenu>
                         <DropdownMenuTrigger as-child>
@@ -243,6 +253,13 @@ const logout = () => {
                     @click="closeMobileMenu"
                 >
                     Cek Transaksi
+                </Link>
+                <Link
+                    href="/cart"
+                    class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
+                    @click="closeMobileMenu"
+                >
+                    Keranjang
                 </Link>
                 <Link
                     href="/profile"

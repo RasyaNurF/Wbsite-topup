@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AddToCartButton from '@/components/cart/AddToCartButton.vue';
 import { formatCurrency } from '@/lib/utils';
 import { PPOBProductDataItem } from '@/types/cms/ppob';
 import { ClockIcon } from 'lucide-vue-next';
@@ -29,9 +30,11 @@ const emit = defineEmits<{
             v-if="products && products.length > 0"
             class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
         >
-            <button
+            <div
                 v-for="product in products"
                 :key="product.id"
+                role="button"
+                tabindex="0"
                 class="flex h-full flex-col overflow-hidden rounded-xl border-2 text-left transition-all"
                 :class="
                     selectedProduct === product.id
@@ -39,6 +42,7 @@ const emit = defineEmits<{
                         : 'border-border/50 hover:border-primary/50'
                 "
                 @click="emit('update:selectedProduct', product.id)"
+                @keydown.enter="emit('update:selectedProduct', product.id)"
             >
                 <div class="pt-4 pl-4 text-sm font-semibold text-foreground">
                     {{ product.name }}
@@ -81,9 +85,16 @@ const emit = defineEmits<{
                             v-html="product.description"
                             class="text-muted-foreground"
                         ></span>
+                        <AddToCartButton
+                            :product-id="product.id"
+                            size="sm"
+                            variant="outline"
+                            label="Keranjang"
+                            class="mt-1 w-full"
+                        />
                     </div>
                 </div>
-            </button>
+            </div>
         </div>
         <div v-else class="py-8 text-center text-sm text-muted-foreground">
             Tidak ada produk tersedia
