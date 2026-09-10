@@ -55,7 +55,7 @@ const handleSearch = () => {
         </component>
     </Head>
 
-    <div class="flex min-h-screen flex-col bg-background">
+    <div class="storefront flex min-h-screen flex-col bg-background">
         <!-- Header -->
         <MainHeader />
 

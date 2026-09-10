@@ -33,7 +33,7 @@ watch(
 </script>
 
 <template>
-    <div class="flex min-h-screen flex-col bg-background">
+    <div class="storefront flex min-h-screen flex-col bg-background">
         <Head :title="'Detail Transaksi ' + order.reference" />
         <!-- Header -->
         <MainHeader :show-back-button="true" />

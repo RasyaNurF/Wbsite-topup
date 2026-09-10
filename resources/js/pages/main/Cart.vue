@@ -359,7 +359,7 @@ const handleCheckout = () => {
 <template>
     <Head title="Keranjang Saya" />
 
-    <div class="flex min-h-screen flex-col bg-background">
+    <div class="storefront flex min-h-screen flex-col bg-background">
         <MainHeader />
 
         <main class="flex-1">

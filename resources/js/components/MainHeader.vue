@@ -70,27 +70,33 @@ const logout = () => {
 </script>
 
 <template>
-    <header class="border-b border-border/50 bg-card shadow-sm">
-        <div class="mx-auto max-w-7xl px-4 py-4">
+    <header
+        class="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-xl"
+    >
+        <div class="mx-auto max-w-7xl px-5 py-4 sm:px-8">
             <div class="flex items-center justify-between gap-4">
                 <!-- Logo -->
-                <Link href="/" class="flex items-center gap-2">
+                <Link
+                    href="/"
+                    class="flex min-w-0 shrink-0 items-center gap-3"
+                    :aria-label="appName + ' — Beranda'"
+                >
                     <img
                         v-if="appLogo"
                         :src="appLogo"
                         alt="Logo"
-                        class="h-10 w-10 rounded-lg object-cover"
+                        class="h-10 w-10 rounded-xl object-cover"
                     />
                     <div
                         v-else
-                        class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary"
+                        class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground"
                     >
-                        <span class="text-xl font-bold text-white">{{
+                        <span class="text-xl font-bold">{{
                             appName.charAt(0)
                         }}</span>
                     </div>
                     <span
-                        class="hidden text-xl font-bold text-foreground md:inline"
+                        class="hidden max-w-40 truncate text-lg font-semibold tracking-tight text-foreground sm:inline"
                     >
                         {{ appName }}
                     </span>
@@ -109,30 +115,49 @@ const logout = () => {
                 <div v-else class="flex-1"></div>
 
                 <!-- Desktop Navigation -->
-                <nav class="hidden items-center gap-6 md:flex">
+                <nav
+                    class="hidden items-center gap-5 lg:flex"
+                    aria-label="Navigasi utama"
+                >
                     <Link
                         href="/"
-                        class="text-sm font-medium text-foreground hover:text-primary"
+                        class="storefront-nav-link"
+                        :aria-current="
+                            page.url === '/' || page.url.startsWith('/?')
+                                ? 'page'
+                                : undefined
+                        "
                     >
                         Beranda
                     </Link>
                     <Link
                         href="/transaction"
-                        class="text-sm font-medium text-foreground hover:text-primary"
+                        class="storefront-nav-link"
+                        :aria-current="
+                            page.url.startsWith('/transaction')
+                                ? 'page'
+                                : undefined
+                        "
                     >
                         Cek Transaksi
                     </Link>
                     <Link
                         href="/cart"
-                        class="text-sm font-medium text-foreground hover:text-primary"
+                        class="storefront-nav-link"
+                        :aria-current="
+                            page.url.startsWith('/cart') ? 'page' : undefined
+                        "
                     >
                         Keranjang
                     </Link>
                     <Link
                         href="/profile"
-                        class="text-sm font-medium text-foreground hover:text-primary"
+                        class="storefront-nav-link"
+                        :aria-current="
+                            page.url.startsWith('/profile') ? 'page' : undefined
+                        "
                     >
-                        Profile
+                        Profil
                     </Link>
                 </nav>
 
@@ -147,7 +172,7 @@ const logout = () => {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                class="h-9 w-9 rounded-full border-0"
+                                class="h-10 w-10 rounded-full border border-border/70"
                             >
                                 <Sun
                                     v-if="appearance === 'light'"
@@ -183,7 +208,12 @@ const logout = () => {
                     <!-- Mobile Menu Button -->
                     <button
                         v-if="!showBackButton"
-                        class="flex items-center justify-center rounded-md p-2 text-foreground hover:bg-muted md:hidden"
+                        class="flex size-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-muted lg:hidden"
+                        :aria-expanded="mobileMenuOpen"
+                        aria-controls="storefront-mobile-menu"
+                        :aria-label="
+                            mobileMenuOpen ? 'Tutup menu' : 'Buka menu'
+                        "
                         @click="toggleMobileMenu"
                     >
                         <Menu v-if="!mobileMenuOpen" class="h-6 w-6" />
@@ -203,97 +233,100 @@ const logout = () => {
                     <!-- Auth Buttons -->
                     <div
                         v-if="!page.props.auth.user"
-                        class="hidden items-center gap-2 md:flex"
+                        class="hidden items-center gap-2 lg:flex"
                     >
                         <Link href="/login">
-                            <Button variant="outline">
+                            <Button variant="ghost" class="rounded-full px-4">
                                 <!-- LogIn Icon -->
                                 <LogIn class="h-4 w-4" />
-                                <span>LOG IN</span>
+                                <span>Masuk</span>
                             </Button>
                         </Link>
                         <Link href="/register">
-                            <Button variant="outline">
+                            <Button class="storefront-button rounded-full px-5">
                                 <!-- UserPlus Icon -->
                                 <UserPlus class="h-4 w-4" />
-                                <span>SIGN UP</span>
+                                <span>Daftar</span>
                             </Button>
                         </Link>
                     </div>
                     <Button
                         v-else
                         variant="outline"
-                        class="hidden md:flex"
+                        class="hidden rounded-full lg:flex"
                         @click="logout"
                     >
                         <!-- LogOut Icon -->
                         <LogIn class="h-4 w-4 rotate-180" />
-                        <span>LOG OUT</span>
+                        <span>Keluar</span>
                     </Button>
                 </div>
             </div>
         </div>
 
         <!-- Mobile Navigation Menu -->
-        <div
-            v-if="mobileMenuOpen"
-            class="border-t border-border/50 bg-card md:hidden"
-        >
-            <nav class="mx-auto max-w-7xl space-y-1 px-4 py-4">
-                <Link
-                    href="/"
-                    class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
-                    @click="closeMobileMenu"
-                >
-                    Beranda
-                </Link>
-                <Link
-                    href="/transaction"
-                    class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
-                    @click="closeMobileMenu"
-                >
-                    Cek Transaksi
-                </Link>
-                <Link
-                    href="/cart"
-                    class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
-                    @click="closeMobileMenu"
-                >
-                    Keranjang
-                </Link>
-                <Link
-                    href="/profile"
-                    class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
-                    @click="closeMobileMenu"
-                >
-                    Profile
-                </Link>
+        <Transition name="storefront-menu">
+            <div
+                v-if="mobileMenuOpen"
+                id="storefront-mobile-menu"
+                class="border-t border-border/50 bg-card lg:hidden"
+            >
+                <nav class="mx-auto max-w-7xl space-y-1 px-4 py-4">
+                    <Link
+                        href="/"
+                        class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
+                        @click="closeMobileMenu"
+                    >
+                        Beranda
+                    </Link>
+                    <Link
+                        href="/transaction"
+                        class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
+                        @click="closeMobileMenu"
+                    >
+                        Cek Transaksi
+                    </Link>
+                    <Link
+                        href="/cart"
+                        class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
+                        @click="closeMobileMenu"
+                    >
+                        Keranjang
+                    </Link>
+                    <Link
+                        href="/profile"
+                        class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
+                        @click="closeMobileMenu"
+                    >
+                        Profile
+                    </Link>
 
-                <!-- Mobile Auth Links -->
-                <template v-if="!page.props.auth.user">
-                    <Link
-                        href="/login"
-                        class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
-                        @click="closeMobileMenu"
+                    <!-- Mobile Auth Links -->
+                    <template v-if="!page.props.auth.user">
+                        <Link
+                            href="/login"
+                            class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
+                            @click="closeMobileMenu"
+                        >
+                            Log In
+                        </Link>
+                        <Link
+                            href="/register"
+                            class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
+                            @click="closeMobileMenu"
+                        >
+                            Sign Up
+                        </Link>
+                    </template>
+                    <button
+                        v-else
+                        class="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-foreground hover:bg-muted hover:text-primary"
+                        @click="logout"
                     >
-                        Log In
-                    </Link>
-                    <Link
-                        href="/register"
-                        class="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted hover:text-primary"
-                        @click="closeMobileMenu"
-                    >
-                        Sign Up
-                    </Link>
-                </template>
-                <button
-                    v-else
-                    class="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-foreground hover:bg-muted hover:text-primary"
-                    @click="logout"
-                >
-                    Log Out
-                </button>
-            </nav>
-        </div>
+                        Log Out
+                    </button>
+                </nav>
+            </div>
+        </Transition>
     </header>
 </template>

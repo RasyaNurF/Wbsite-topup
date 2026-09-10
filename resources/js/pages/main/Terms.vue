@@ -25,7 +25,7 @@ const appUrl = page.props.app_url;
         </component>
     </Head>
 
-    <div class="min-h-screen bg-background">
+    <div class="storefront min-h-screen bg-background">
         <!-- Header -->
         <MainHeader :show-search="false" />
 

@@ -337,7 +337,7 @@ const handleCheckout = () => {
         </component>
     </Head>
 
-    <div class="flex min-h-screen flex-col bg-background">
+    <div class="storefront flex min-h-screen flex-col bg-background">
         <!-- Header -->
         <MainHeader :show-back-button="true" />
 

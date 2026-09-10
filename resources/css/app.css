@@ -178,3 +178,189 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* Storefront tokens also reach menus and dialogs rendered outside the page. */
+:root:has(.storefront),
+.storefront {
+    --background: #f6f8fc;
+    --foreground: #17243c;
+    --card: #ffffff;
+    --card-foreground: #17243c;
+    --popover: #ffffff;
+    --popover-foreground: #17243c;
+    --primary: #3564df;
+    --primary-foreground: #ffffff;
+    --secondary: #edf1fa;
+    --secondary-foreground: #253857;
+    --muted: #edf1f7;
+    --muted-foreground: #62718a;
+    --accent: #e7edfb;
+    --accent-foreground: #264fc0;
+    --border: #e1e7f0;
+    --input: #e1e7f0;
+    --ring: #3564df;
+    --radius: 0.85rem;
+}
+
+:root.dark:has(.storefront),
+.dark .storefront {
+    --background: #0c1423;
+    --foreground: #e9eef8;
+    --card: #131f32;
+    --card-foreground: #e9eef8;
+    --popover: #172439;
+    --popover-foreground: #e9eef8;
+    --primary: #8bb1ff;
+    --primary-foreground: #10203e;
+    --secondary: #1b2a41;
+    --secondary-foreground: #d7e3fa;
+    --muted: #1b2a41;
+    --muted-foreground: #9baac2;
+    --accent: #233756;
+    --accent-foreground: #b9d1ff;
+    --border: #26344b;
+    --input: #30415e;
+    --ring: #8bb1ff;
+}
+
+.storefront {
+    -webkit-font-smoothing: antialiased;
+}
+
+.storefront :is(a, button, input, select, textarea):focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 4px;
+}
+
+.storefront :is(button, a) {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.storefront-eyebrow {
+    color: var(--muted-foreground);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+}
+
+.storefront-category {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: var(--card);
+    color: var(--foreground);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition:
+        background-color 200ms,
+        border-color 200ms,
+        color 200ms;
+}
+
+.storefront-category:hover,
+.storefront-category.is-active {
+    border-color: var(--primary);
+    background: var(--accent);
+    color: var(--accent-foreground);
+}
+
+.storefront-button {
+    transition:
+        background-color 200ms,
+        box-shadow 200ms,
+        transform 200ms;
+}
+
+.storefront-product {
+    transition:
+        transform 300ms cubic-bezier(0.2, 0.7, 0.3, 1),
+        box-shadow 300ms,
+        border-color 300ms;
+}
+
+.storefront-nav-link {
+    position: relative;
+    padding-block: 0.5rem;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: color 200ms;
+}
+
+.storefront-nav-link:hover,
+.storefront-nav-link[aria-current='page'] {
+    color: var(--primary);
+}
+
+.storefront-nav-link[aria-current='page']::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    content: '';
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html:has(.storefront) {
+        scroll-behavior: smooth;
+    }
+
+    .storefront-reveal {
+        animation: storefront-entrance 600ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+    }
+
+    .storefront-menu-enter-active,
+    .storefront-menu-leave-active {
+        transition:
+            opacity 180ms,
+            transform 180ms;
+    }
+
+    .storefront-menu-enter-from,
+    .storefront-menu-leave-to {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .storefront-product:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 36px -20px rgb(30 64 130 / 30%);
+    }
+
+    .storefront-button:hover {
+        transform: translateY(-2px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .storefront *,
+    .storefront *::before,
+    .storefront *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@keyframes storefront-entrance {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

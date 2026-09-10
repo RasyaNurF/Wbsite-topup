@@ -26,7 +26,7 @@ const activeTab = ref<Tab>('profile');
 <template>
     <Head title="Profile" />
 
-    <div class="flex min-h-screen flex-col bg-background">
+    <div class="storefront flex min-h-screen flex-col bg-background">
         <!-- Header -->
         <MainHeader />
 
