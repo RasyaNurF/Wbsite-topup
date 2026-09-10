@@ -4,25 +4,17 @@ namespace App\Http\Controllers\Api\V1\Callback;
 
 use App\Actions\Api\V1\Callback\HandleMidtransCallbackAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Callback\MidtransCallbackRequest;
 use App\Traits\WithReturnResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
 
 class MidtransController extends Controller
 {
     use WithReturnResponse;
 
-    public function callback(Request $request, HandleMidtransCallbackAction $action)
+    public function callback(MidtransCallbackRequest $request, HandleMidtransCallbackAction $action): JsonResponse
     {
-        try {
-            $action->handle($request->all());
-        } catch (\Exception $e) {
-            Log::error('Midtrans Callback Error', [
-                'error' => $e->getMessage(),
-            ]);
-
-            return $this->responseWithError($e->getMessage(), 400);
-        }
+        $action->handle($request->validated());
 
         return $this->responseWithSuccess('Callback received');
     }

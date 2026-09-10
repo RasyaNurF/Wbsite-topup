@@ -8,7 +8,7 @@ use App\Models\PPOB\PPOBBrand;
 use App\Models\PPOB\PPOBCategory;
 use App\Models\User;
 
-test('expired payments with pending status are updated to expired', function () {
+test('expired manual payments with pending status are updated to expired', function () {
     $user = User::factory()->create();
 
     $category = PPOBCategory::create([
@@ -37,6 +37,7 @@ test('expired payments with pending status are updated to expired', function () 
     ]);
 
     Payment::create([
+        'driver' => 'manual',
         'payable_type' => Order::class,
         'payable_id' => $order->id,
         'order_id' => 'ORDER-'.uniqid(),
@@ -78,6 +79,7 @@ test('non-expired payments are not affected', function () {
     ]);
 
     Payment::create([
+        'driver' => 'manual',
         'payable_type' => Order::class,
         'payable_id' => $order->id,
         'order_id' => 'ORDER-'.uniqid(),
@@ -119,6 +121,7 @@ test('payments with non-pending status are not affected', function () {
     ]);
 
     Payment::create([
+        'driver' => 'manual',
         'payable_type' => Order::class,
         'payable_id' => $order->id,
         'order_id' => 'ORDER-'.uniqid(),

@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::job(new ExpirePayments)->hourly();
+Schedule::command('payments:sync-midtrans')->everyMinute()->withoutOverlapping();

@@ -17,6 +17,8 @@ class ExpirePayments implements ShouldQueue
     public function handle(): void
     {
         Payment::query()
+            ->where('driver', '!=', 'midtrans')
+            ->whereNull('paid_at')
             ->where('expired_at', '<=', now())
             ->whereHasMorph('payable', '*', function ($query) {
                 $query->where('payment_status', PaymentStatusEnum::PENDING);

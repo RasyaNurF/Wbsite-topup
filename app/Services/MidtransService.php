@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class MidtransService
@@ -68,7 +67,7 @@ class MidtransService
         ];
 
         // Response
-        $response = Http::withBasicAuth($this->serverKey.':', '')->post($this->baseUrl.'/v2/charge', $params);
+        $response = Http::withBasicAuth($this->serverKey, '')->post($this->baseUrl.'/v2/charge', $params);
         $responseJson = $response->json();
 
         return [
@@ -110,7 +109,7 @@ class MidtransService
         ];
 
         // Response
-        $response = Http::withBasicAuth($this->serverKey.':', '')->post($this->baseUrl.'/v2/charge', $params);
+        $response = Http::withBasicAuth($this->serverKey, '')->post($this->baseUrl.'/v2/charge', $params);
         $responseJson = $response->json();
 
         return [
@@ -158,7 +157,7 @@ class MidtransService
         ];
 
         // Response
-        $response = Http::withBasicAuth($this->serverKey.':', '')->post($this->baseUrl.'/v2/charge', $params);
+        $response = Http::withBasicAuth($this->serverKey, '')->post($this->baseUrl.'/v2/charge', $params);
         $responseJson = $response->json();
 
         return [
@@ -171,10 +170,24 @@ class MidtransService
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
+    public function getTransactionStatus(string $transactionId): array
+    {
+        return Http::withBasicAuth($this->serverKey, '')
+            ->acceptJson()
+            ->connectTimeout(3)
+            ->timeout(5)
+            ->get($this->baseUrl.'/v2/'.rawurlencode($transactionId).'/status')
+            ->throw()
+            ->json();
+    }
+
     public function validateSignature(string $orderId, string $statusCode, string $grossAmount, string $signatureKey): bool
     {
         $hashedKey = hash('sha512', $orderId.$statusCode.$grossAmount.$this->serverKey);
 
-        return $hashedKey === $signatureKey;
+        return filled($this->serverKey) && hash_equals($hashedKey, $signatureKey);
     }
 }

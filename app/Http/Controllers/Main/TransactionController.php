@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Main;
 
 use App\Actions\Main\CheckVoucherAction;
 use App\Actions\Main\StoreTransactionAction;
+use App\Actions\Main\SyncMidtransPaymentAction;
 use App\Actions\Main\UpdateTransactionAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Main\CheckVoucherRequest;
@@ -80,8 +81,13 @@ class TransactionController extends Controller
     /**
      * Display the specified transaction.
      */
-    public function show(Order $order)
+    public function show(Order $order, SyncMidtransPaymentAction $syncPayment)
     {
+        if ($order->payment) {
+            $syncPayment->handle($order->payment);
+            $order->refresh();
+        }
+
         $order->load('payment.media', 'product.media', 'brand.media', 'product.brand.category', 'media', 'items.product.media', 'items.product.brand');
 
         // Map product image
