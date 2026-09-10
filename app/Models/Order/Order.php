@@ -72,6 +72,16 @@ class Order extends Model implements HasMedia
         return $this->morphOne(Payment::class, 'payable');
     }
 
+    /**
+     * Line items for orders checked out from the cart (multiple products in
+     * one order). Empty for orders created via the single-product "buy now"
+     * flow, which use `product()` instead.
+     */
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
     public function notifications()
     {
         return $this->hasMany(OrderNotification::class);

@@ -41,7 +41,7 @@ class ValidatePaymentAction
             $customer = $accountId.$serverId;
 
             // If the provider is Digiflazz, create transaction to Digiflazz
-            if ($order->product->provider === 'digiflazz') {
+            if ($order->product?->provider === 'digiflazz') {
                 // Digiflazz::createPrepaidTransaction(\n//     productCode: $order->product->sku,
                 //     customerNo: $customer,
                 //     refId: $order->reference,

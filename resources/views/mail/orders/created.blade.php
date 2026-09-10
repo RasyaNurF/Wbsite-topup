@@ -3,7 +3,14 @@
 <br />
 🎮 Berikut adalah detail pesanan Anda:
 - 🆔 ID Pesanan: **{{ $order->reference }}**
+@if ($order->product)
 - 🛒 Produk: **{{ $order->product->name }}**
+@elseif ($order->items->isNotEmpty())
+- 🛒 Produk:
+@foreach ($order->items as $item)
+  - {{ $item->product->name ?? 'Produk' }} x{{ $item->quantity }}
+@endforeach
+@endif
 - 🧾 Total: **{{ numberToCurrency($order->total_amount) }}**
 <br />
 <x-mail::button :url="route('transaction.show', [

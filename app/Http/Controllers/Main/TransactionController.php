@@ -82,12 +82,20 @@ class TransactionController extends Controller
      */
     public function show(Order $order)
     {
-        $order->load('payment.media', 'product.media', 'brand.media', 'product.brand.category', 'media');
+        $order->load('payment.media', 'product.media', 'brand.media', 'product.brand.category', 'media', 'items.product.media', 'items.product.brand');
 
         // Map product image
         if ($order->product) {
             $order->product->image = $order->product->getFirstMediaUrl('image') ?: $order->brand?->getFirstMediaUrl('default_product_image');
             $order->product->makeHidden('media');
+        }
+
+        // Map images for each cart line item
+        foreach ($order->items as $item) {
+            if ($item->product) {
+                $item->product->image = $item->product->getFirstMediaUrl('image') ?: $item->product->brand?->getFirstMediaUrl('image');
+                $item->product->makeHidden('media');
+            }
         }
 
         // Map brand image
@@ -218,6 +226,21 @@ class TransactionController extends Controller
                 ...$order->submited,
                 'server_id' => $server_id,
             ];
+        }
+
+        // Mask account/server ID for every cart line item too
+        foreach ($order->items as $item) {
+            $submited = $item->submited ?? [];
+
+            if (isset($submited['account_id'])) {
+                $submited['account_id'] = preg_replace('/.(?=.{2})/', '*', $submited['account_id']);
+            }
+
+            if (isset($submited['server_id'])) {
+                $submited['server_id'] = preg_replace('/.(?=.{2})/', '*', $submited['server_id']);
+            }
+
+            $item->submited = $submited;
         }
 
         return $order;

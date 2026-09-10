@@ -21,6 +21,7 @@ Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
 Route::patch('/cart/{cartItem}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
 Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
+Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 
 Route::post('/checkout', [TransactionController::class, 'store'])->name('checkout.store');
 Route::get('/transaction/{order}', [TransactionController::class, 'show'])->name('transaction.show');

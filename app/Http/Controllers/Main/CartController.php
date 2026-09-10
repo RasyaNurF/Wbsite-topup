@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Main\AddCartItemRequest;
+use App\Http\Requests\Main\CheckoutCartRequest;
 use App\Http\Requests\Main\UpdateCartItemRequest;
+use App\Actions\Main\StoreCartCheckoutAction;
 use App\Models\Cart\CartItem;
 use App\Models\PPOB\PPOBProduct;
 use App\Services\CartService;
 use App\Traits\WithReturnResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -86,6 +89,24 @@ class CartController extends Controller
         $this->cartService->clear($this->cartService->currentCart($request));
 
         return back()->with('success', 'Keranjang dikosongkan.');
+    }
+
+    /**
+     * Checkout every item currently in the cart into a single order.
+     */
+    public function checkout(CheckoutCartRequest $request, StoreCartCheckoutAction $action)
+    {
+        $cart = $this->cartService->currentCart($request);
+
+        try {
+            $order = DB::transaction(function () use ($cart, $request, $action) {
+                return $action->handle($cart, $request->validated());
+            });
+
+            return to_route('transaction.show', ['order' => $order]);
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => $e->getMessage()])->withInput();
+        }
     }
 
     /**

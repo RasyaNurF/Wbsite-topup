@@ -22,8 +22,11 @@ defineProps<{
                 </p>
             </div>
 
-            <!-- Product Info -->
-            <div class="flex gap-3 rounded-lg bg-muted/50 p-3">
+            <!-- Product Info: single product (buy-now flow) -->
+            <div
+                v-if="order.product"
+                class="flex gap-3 rounded-lg bg-muted/50 p-3"
+            >
                 <img
                     v-if="order?.product?.image"
                     :src="order.product.image"
@@ -43,8 +46,53 @@ defineProps<{
                 </div>
             </div>
 
-            <!-- Account Details -->
-            <div class="space-y-2 rounded-lg bg-muted/50 p-3">
+            <!-- Product Info: multiple items (cart checkout flow) -->
+            <div
+                v-else-if="order.items && order.items.length > 0"
+                class="divide-y divide-border/50 rounded-lg bg-muted/50"
+            >
+                <div
+                    v-for="item in order.items"
+                    :key="item.id"
+                    class="flex gap-3 p-3"
+                >
+                    <img
+                        v-if="item.product?.image"
+                        :src="item.product.image"
+                        :alt="item.product?.name"
+                        class="h-12 w-12 rounded-lg object-cover"
+                    />
+                    <div class="flex-1">
+                        <p class="text-xs text-muted-foreground">
+                            {{ item.product?.brand?.name }}
+                        </p>
+                        <p class="text-sm font-medium text-foreground">
+                            {{ item.product?.name ?? 'Produk' }}
+                            <span class="text-muted-foreground"
+                                >x{{ item.quantity }}</span
+                            >
+                        </p>
+                        <p
+                            v-if="item.submited?.account_id"
+                            class="mt-0.5 text-xs text-muted-foreground"
+                        >
+                            ID: {{ item.submited.account_id
+                            }}<span v-if="item.submited?.server_id">
+                                ({{ item.submited.server_id }})</span
+                            >
+                        </p>
+                        <p class="mt-1 text-sm font-bold text-primary">
+                            {{ formatCurrency(item.subtotal) }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Details: only relevant for single-product game topup orders -->
+            <div
+                v-if="order.submited?.account_id"
+                class="space-y-2 rounded-lg bg-muted/50 p-3"
+            >
                 <div>
                     <p class="text-xs text-muted-foreground">ID Akun</p>
                     <p class="font-medium text-foreground">
@@ -131,6 +179,15 @@ defineProps<{
                 >
                     <span class="text-sm text-muted-foreground">
                         Status Top Up
+                    </span>
+                    <StatusBadge :status="order.topup_status" type="topup" />
+                </div>
+                <div
+                    class="flex items-center justify-between"
+                    v-else-if="order.items && order.items.length > 0"
+                >
+                    <span class="text-sm text-muted-foreground">
+                        Status Pesanan
                     </span>
                     <StatusBadge :status="order.topup_status" type="topup" />
                 </div>

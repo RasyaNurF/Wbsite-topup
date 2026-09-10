@@ -130,7 +130,7 @@ class HandleMidtransCallbackAction
             $customer = $accountId.$serverId;
 
             // If the provider is Digiflazz, create transaction to Digiflazz
-            if ($order->brand->provider === 'digiflazz') {
+            if ($order->brand?->provider === 'digiflazz' && $order->product) {
                 Digiflazz::createPrepaidTransaction(
                      productCode: $order->product->sku,
                      customerNo: $customer,

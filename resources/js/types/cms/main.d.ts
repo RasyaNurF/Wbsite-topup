@@ -31,6 +31,17 @@ export interface OrderNotificationDataItem {
     updated_at: string;
 }
 
+export interface OrderItemDataItem {
+    id: number;
+    order_id: number;
+    p_p_o_b_product_id: number | null;
+    quantity: number;
+    price: number;
+    subtotal: number;
+    submited?: { account_id?: string; server_id?: string } | null;
+    product?: PPOBProductDataItem | null;
+}
+
 export interface OrderDataItem {
     id: number;
     user_id: number;
@@ -55,6 +66,7 @@ export interface OrderDataItem {
     product?: PPOBProductDataItem;
     brand?: PPOBBrandDataItem;
     payment?: PaymentDataItem;
+    items?: OrderItemDataItem[];
     notifications?: OrderNotificationDataItem[];
     voucher_use?: {
         id: number;

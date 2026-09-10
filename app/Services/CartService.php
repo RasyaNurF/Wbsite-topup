@@ -154,8 +154,10 @@ class CartService
                     'status' => $product->status,
                     'image' => $product->getFirstMediaUrl('image') ?: $product->brand?->getFirstMediaUrl('image'),
                     'brand' => $product->brand ? [
+                        'id' => $product->brand->id,
                         'name' => $product->brand->name,
                         'slug' => $product->brand->slug,
+                        'settings' => $product->brand->settings,
                     ] : null,
                 ],
             ];
